@@ -12,11 +12,13 @@ def dataCleansing(df, sheetName):
 
     print(df)
 
+
     cleanedData["日付"] = cleanedData.apply(func=lambda x: pd.to_datetime(sheetName), axis=1)
     cleanedData["YYYY-MM-DD_hh:mm:ss_startTime"] = cleanedData.apply(func=lambda x: addYMD(x["開始時刻"], sheetName), axis=1)
     cleanedData["YYYY-MM-DD_hh:mm:ss_endTime"] = cleanedData.apply(func=lambda x: addYMD(x["終了時刻"], sheetName), axis=1)
     cleanedData["workTime"] = cleanedData.apply(func=lambda x: x["YYYY-MM-DD_hh:mm:ss_endTime"] - x["YYYY-MM-DD_hh:mm:ss_startTime"], axis=1)
 
+    print(cleanedData)
     return cleanedData
 
 
@@ -27,19 +29,32 @@ def getSequentialData(FilePath):
     targetSheets = deepcopy(sheetNames)
     targetSheets.remove("テンプレ")
 
-    sequentialData = [dataCleansing(sheets.parse(sheet_name=sheetName), sheetName)
-                      for sheetName in targetSheets]
-    # print(sequentialData)
+    sequentialData = []
+
+    for sheet in targetSheets:
+        data = sheets.parse(sheetname=sheet)
+        cleanedData = dataCleansing(data, sheet)
+        sequentialData.append(cleanedData)
 
     return pd.concat(sequentialData)
 
+
 def analyzeSequentialData(sequentialData):
     print(sequentialData)
-    ana1 = sequentialData.groupby("タスク名")["workTime"].sum()
-    ana1.to_excel('taskSum.xlsx', index=True, encoding="UTF-8")
-    print(ana1)
-    print(sequentialData.resample(rule="D", on="日付").mean())
 
+    ana1 = sequentialData.groupby("タスク分類")["workTime"].sum()
+    ana1.to_excel('taskGroupSum.xlsx', index=True, encoding="UTF-8")
+    print(ana1)
+
+    ana2 = sequentialData.groupby("タスク名")["workTime"].sum()
+    ana2.to_excel('taskNameSum.xlsx', index=True, encoding="UTF-8")
+    print(ana2)
+
+    ana3 = sequentialData.groupby(["タスク分類", "タスク名"])["workTime"].sum()
+    ana2.to_excel('taskGroupNameSum.xlsx', index=True, encoding="UTF-8")
+    print(ana3)
+
+    # print(sequentialData.resample(rule="D", on="日付").mean())
 
 
 def exportSequentialData(analyzed):
