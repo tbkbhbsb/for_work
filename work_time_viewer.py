@@ -170,4 +170,3 @@ def DataAnalyze():
 if __name__ == '__main__':
     createDataAndAnalyze()
     # DataAnalyze()
-
