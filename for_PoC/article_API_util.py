@@ -1,4 +1,4 @@
-"""
+﻿"""
 article_API_util.py
 
 記事を作る為の機能を書くモジュール
@@ -48,7 +48,7 @@ def articlesDataFactory(DataSourceFilePath):
         # basePropertiesの部分について、文字列として組み立て
         for baseProperty in baseProperties:
             dataDicStr += '"' + baseProperty + '"' + ": " + \
-                '"' + str(val[baseProperty]) + '"' + ", "
+                '"""' + str(val[baseProperty]) + '"""' + ", "
         # ループ終了時に実行
         else:
             dataDicStr = "{" + dataDicStr + "}"
