@@ -102,14 +102,14 @@ if __name__ == '__main__':
     # Usage : <this> https://yourcompany.zendesk.com you@yourcompany.com passwd
     argvs = sys.argv
     argc = len(argvs)
-    if (argc != 4):
-        print("Usage : <this> https://yourcompany.zendesk.com you@yourcompany.com passwd")
+    if (argc != 5):
+        print("Usage : <this> https://yourcompany.zendesk.com you@yourcompany.com passwd <filepath>")
         quit()
     
     zendesk = Zendesk(argvs[1], # site
                       argvs[2], # Username
                       argvs[3]) # Password
 
-    articlesData = articlesDataFactory("sampleArticleData.xlsx")
+    articlesData = articlesDataFactory(argvs[4])
 
     articlesCreateOnInstance(zendesk, articlesData)
