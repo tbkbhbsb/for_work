@@ -34,7 +34,7 @@ def articlesDataFactory(DataSourceFilePath):
     articlesData = []
 
     # basePropertiseの指定
-    baseProperties = ["locale", "comments_disabled", "draft", "title", "body"]
+    baseProperties = ["locale", "comments_disabled", "draft", "author_id", "title", "body"]
 
     # additionalPropertiesの算出
     additionalProperties = list(
