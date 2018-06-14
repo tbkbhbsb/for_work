@@ -11,6 +11,7 @@ article_API_util.py
 from ast import literal_eval
 from pprint import pprint
 
+import sys
 import pandas as pd
 from zdesk import Zendesk
 
@@ -33,7 +34,7 @@ def articlesDataFactory(DataSourceFilePath):
     articlesData = []
 
     # basePropertiseの指定
-    baseProperties = ["locale", "comments_disabled", "draft", "title", "body"]
+    baseProperties = ["locale", "comments_disabled", "draft", "author_id", "title", "body"]
 
     # additionalPropertiesの算出
     additionalProperties = list(
@@ -90,7 +91,7 @@ def articlesCreateOnInstance(zendesk, articlesDataList):
     for articleData in articlesDataList:
         result = zendesk.help_center_section_article_create(
             targetSectionID, articleData)
-        # デバック用
+        # デバッグ用
         # print(result)
 
 
@@ -98,9 +99,17 @@ def articlesCreateOnInstance(zendesk, articlesDataList):
 このファイルをpythonインタプリタの引数として与えた時、これが実行される
 """
 if __name__ == '__main__':
-    zendesk = Zendesk('https://yourcompany.zendesk.com',
-                      'you@yourcompany.com', 'passwd')
+    # Usage : <this> https://yourcompany.zendesk.com you@yourcompany.com passwd
+    argvs = sys.argv
+    argc = len(argvs)
+    if (argc != 5):
+        print("Usage : <this> https://yourcompany.zendesk.com you@yourcompany.com passwd <filepath>")
+        quit()
+    
+    zendesk = Zendesk(argvs[1], # site
+                      argvs[2], # Username
+                      argvs[3]) # Password
 
-    articlesData = articlesDataFactory("sampleArticleData.xlsx")
+    articlesData = articlesDataFactory(argvs[4])
 
     articlesCreateOnInstance(zendesk, articlesData)
